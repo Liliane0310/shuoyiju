@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>训练规则定制</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      padding: 48px 40px;
+      display: block;
+      overflow-y: auto;
+      -webkit-app-region: drag;
+    }
+
+    .editor-container {
+      -webkit-app-region: no-drag;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+
+    .subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--mute);
+      margin-bottom: 36px;
+      line-height: 1.8;
+      letter-spacing: 0.03em;
+      padding-bottom: 20px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .section-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .badge-locked {
+      background: transparent;
+      border: 1px solid var(--mute);
+      color: var(--mute);
+    }
+
+    .badge-editable {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .section-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--mute);
+      margin-bottom: 14px;
+      line-height: 1.7;
+    }
+
+    .locked-preview {
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 0;
+      padding: 36px 22px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--mute);
+      line-height: 2;
+      max-height: 200px;
+      overflow-y: auto;
+      cursor: not-allowed;
+      position: relative;
+    }
+
+    .locked-preview::after {
+      content: 'LOCKED · 不可编辑';
+      position: absolute;
+      top: 12px;
+      left: 22px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--mute);
+      text-transform: uppercase;
+    }
+
+    .locked-preview .locked-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .locked-preview .locked-item:last-child {
+      border-bottom: none;
+    }
+    .locked-preview .locked-bullet {
+      flex-shrink: 0;
+      width: 4px;
+      height: 4px;
+      margin-top: 10px;
+      background: var(--mute);
+      opacity: 0.5;
+    }
+    .locked-preview .locked-text {
+      flex: 1;
+      line-height: 1.8;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 16px 18px;
+      background: var(--paper);
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      color: var(--ink);
+      font-size: 15px;
+      font-family: 'Noto Serif SC', serif;
+      line-height: 1.85;
+      resize: vertical;
+      outline: none;
+      transition: box-shadow 0.15s;
+    }
+
+    textarea:focus {
+      box-shadow: inset 0 0 0 1px var(--ink);
+    }
+
+    textarea::placeholder {
+      color: var(--mute);
+      line-height: 1.85;
+    }
+
+    .example-toggle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+    }
+
+    .example-toggle:hover {
+      text-decoration: underline;
+    }
+
+    .example-content {
+      display: none;
+      background: var(--paper-2);
+      border: 1px dashed var(--ink);
+      border-radius: 0;
+      padding: 16px 18px;
+      margin-top: 10px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.85;
+    }
+
+    .example-content.show {
+      display: block;
+    }
+
+    .btn-back {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 4px 10px;
+      background: transparent;
+      border: 1px solid var(--mute);
+      border-radius: 0;
+      color: var(--mute);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      -webkit-app-region: no-drag;
+      transition: all 0.15s;
+    }
+
+    .btn-back:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 36px;
+    }
+
+    .btn-save {
+      flex: 1;
+      padding: 14px;
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-save:hover {
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .btn-reset {
+      padding: 14px 24px;
+      background: transparent;
+      color: var(--mute);
+      border: 1px solid var(--mute);
+      border-radius: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-reset:hover {
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+    }
+
+    .save-success {
+      text-align: center;
+      color: var(--accent-green);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      margin-top: 16px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .save-success.show {
+      opacity: 1;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 36px 0;
+    }
+
+    /* 模式切换：默认表达模式，隐藏面试区块 */
+    .mode-interview { display: none; }
+    body.mode-interview-active .mode-expression { display: none; }
+    body.mode-interview-active .mode-interview { display: block; }
+</style>
+</head>
+<body>
+  <button class="btn-back" id="btn-back">← 返回</button>
+  <div class="editor-container">
+    <h1><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.18em;margin-right:8px;"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg><span id="page-title">训练规则定制</span></h1>
+    <p class="subtitle" id="page-subtitle">底层词库和基础反馈规则始终生效。你可以在上面叠加个人化的训练目标和规则。</p>
+
+    <!-- 底层：锁定预览（表达模式） -->
+    <div class="section mode-expression">
+      <div class="section-header">
+        <span class="section-title">底层系统规则</span>
+        <span class="section-badge badge-locked">锁定</span>
+      </div>
+      <div class="locked-preview">
+        <div class="locked-item">
+          <div class="locked-bullet"></div>
+          <div class="locked-text">14 条实时反馈规则（重复检测 / 结论缺失 / 自问自答 / 听众视角 / 前后矛盾 / 时间感知 / 金句捕捉 / 类比检测 / 抽象→具象 / 主题漂移 / 立场模糊）</div>
+        </div>
+        <div class="locked-item">
+          <div class="locked-bullet"></div>
+          <div class="locked-text">词库高亮（笼统词 / 填充词 / 犹豫词）</div>
+        </div>
+        <div class="locked-item">
+          <div class="locked-bullet"></div>
+          <div class="locked-text">完整报告模板（总评 / 亮点 / 逐句编辑 / 用词替换表 / 行为模式 / 数据）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底层：锁定预览（面试模式） -->
+    <div class="section mode-interview">
+      <div class="section-header">
+        <span class="section-title">面试复盘底层维度</span>
+        <span class="section-badge badge-locked">锁定</span>
+      </div>
+      <div class="locked-preview">
+        <div class="locked-item">
+          <div class="locked-bullet"></div>
+          <div class="locked-text">STAR 结构诊断（情境 / 任务 / 行动 / 结果 逐项打分）</div>
+        </div>
+        <div class="locked-item">
+          <div class="locked-bullet"></div>
+          <div class="locked-text">面试雷区检查（抢功劳的"我们" / 成果没量化 / 抱怨前司 / 答非所问 / 缺乏思考深度）</div>
+        </div>
+        <div class="locked-item">
+          <div class="locked-bullet"></div>
+          <div class="locked-text">面试官视角（第一印象 / 追问预测 / 综合评分）+ 措辞与表达状态分析</div>
+        </div>
+        <div class="locked-item">
+          <div class="locked-bullet"></div>
+          <div class="locked-text">表达措辞指标（弱化表达率 / 积极词次数 / 弱化词次数 / 填充词频率）</div>
+        </div>
+        <div class="locked-item">
+          <div class="locked-bullet"></div>
+          <div class="locked-text">积极词识别（热情 / 专注 / 从容 / 笃定 / 专业 / 协作等，用来判断热情和主动性）</div>
+        </div>
+        <div class="locked-item">
+          <div class="locked-bullet"></div>
+          <div class="locked-text">弱化词检测（可能 / 也许 / 我觉得 / 应该 / 好像等，并给出更确定的替代表达）</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 用户自定义：训练目标 -->
+    <div class="section mode-expression">
+      <div class="section-header">
+        <span class="section-title">我的训练目标</span>
+        <span class="section-badge badge-editable">可编辑</span>
+      </div>
+      <p class="section-desc">你现阶段最想改善的表达问题是什么？AI会据此调整反馈优先级。</p>
+      <textarea id="goals" placeholder="比如：&#10;- 我想减少说「然后」的频率&#10;- 我想练习每段话都有一个明确结论&#10;- 我想让表达更有画面感，多用具体细节&#10;- 我想练习用数字代替「很多/很少」"></textarea>
+      <span class="example-toggle" onclick="toggleExample('goals-example')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.1em;margin-right:4px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>看示例</span>
+      <div id="goals-example" class="example-content">
+我现在最大的问题是：<br>
+1. 说话太散，经常跑题，一段话说完别人不知道我想表达什么<br>
+2. 口癖「然后」「就是」太多，听起来不专业<br>
+3. 描述事情总是用笼统的词，比如「很好」「挺不错的」，缺少具体画面
+      </div>
+    </div>
+
+    <!-- 用户自定义：自定义规则 -->
+    <div class="section mode-expression">
+      <div class="section-header">
+        <span class="section-title">自定义触发规则</span>
+        <span class="section-badge badge-editable">可编辑</span>
+      </div>
+      <p class="section-desc">格式：触发条件 → 输出什么提示（跟底层14条规则一起生效）</p>
+      <textarea id="custom-rules" placeholder="比如：&#10;- 连续3句以「我」开头 → 「换个主语」&#10;- 出现「其实吧」「说实话」→ 「直接说」&#10;- 超过30秒没举例子 → 「来个例子」"></textarea>
+      <span class="example-toggle" onclick="toggleExample('rules-example')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.1em;margin-right:4px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>看示例</span>
+      <div id="rules-example" class="example-content">
+- 连续说了两个「非常」→ 「换个程度词」<br>
+- 出现「怎么说呢」→ 「别绕，直说」<br>
+- 讲了一个观点但没给原因 → 「为什么？」<br>
+- 用了英文但没翻译 → 「给个中文」
+      </div>
+    </div>
+
+    <!-- 用户自定义：参考风格 -->
+    <div class="section mode-expression">
+      <div class="section-header">
+        <span class="section-title">我想要的表达风格</span>
+        <span class="section-badge badge-editable">可编辑</span>
+      </div>
+      <p class="section-desc">描述你理想中的说话方式，AI会在反馈时以此为标准。</p>
+      <textarea id="style-ref" placeholder="比如：&#10;- 像跟朋友聊天一样自然，不要播音腔&#10;- 多用第二人称「你」直接对观众说话&#10;- 数字锚定：用具体数字代替「很多/一些」&#10;- 先说结论再展开，不要铺垫太久"></textarea>
+    </div>
+
+    <!-- 用户自定义：额外词库 -->
+    <div class="section mode-expression">
+      <div class="section-header">
+        <span class="section-title">我的口癖补充</span>
+        <span class="section-badge badge-editable">可编辑</span>
+      </div>
+      <p class="section-desc">你自己特有的口癖/高频词，底层词库没覆盖到的。</p>
+      <textarea id="custom-words" rows="3" placeholder="比如：对吧、你知道吗、怎么说呢、确实、属于是"></textarea>
+    </div>
+
+    <!-- ===== 面试模式专属区块 ===== -->
+
+    <!-- 面试：岗位与目标 -->
+    <div class="section mode-interview">
+      <div class="section-header">
+        <span class="section-title">我在面什么岗</span>
+        <span class="section-badge badge-editable">可编辑</span>
+      </div>
+      <p class="section-desc">目标岗位、行业、级别，以及你最想通过练习拿下的目标。复盘会据此调整评价标准。</p>
+      <textarea id="interview-goals" placeholder="比如：&#10;- 我在面互联网后端开发，3-5年经验&#10;- 目标是讲清楚项目里我个人的技术决策&#10;- 我容易紧张，想练到能从容说完自我介绍"></textarea>
+      <span class="example-toggle" onclick="toggleExample('interview-goals-example')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.1em;margin-right:4px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>看示例</span>
+      <div id="interview-goals-example" class="example-content">
+我在面产品经理岗位（2年经验，目标中厂）：<br>
+1. 我想讲清楚每个项目里"我"到底做了什么决策，而不是团队做了什么<br>
+2. 我讲成果时总是很虚，想练到每个成果都有数据<br>
+3. 被问到失败经历时容易慌，想准备得更好
+      </div>
+    </div>
+
+    <!-- 面试：复盘关注点 -->
+    <div class="section mode-interview">
+      <div class="section-header">
+        <span class="section-title">复盘重点关注</span>
+        <span class="section-badge badge-editable">可编辑</span>
+      </div>
+      <p class="section-desc">你希望面试官视角的复盘特别盯住哪些方面？可以指定弱化表达、积极词、回答结构等指标，会追加到复盘要求里。</p>
+      <textarea id="interview-focus" placeholder="比如：&#10;- 重点帮我抓&quot;抢功劳的我们&quot;和没量化的成果&#10;- 指出哪些弱化表达影响了回答的明确性&#10;- 帮我统计积极词够不够，判断回答是否显得主动、有热情&#10;- 把「可能」「我觉得」「应该」这类弱化词改成更明确的版本"></textarea>
+      <span class="example-toggle" onclick="toggleExample('interview-focus-example')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.1em;margin-right:4px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>看示例</span>
+      <div id="interview-focus-example" class="example-content">
+- 我最大的毛病是讲成果不给数字，请每次都揪出来并帮我补一个量化版本<br>
+- 我习惯用"我们"，请帮我把该说"我"的地方标出来<br>
+- 帮我判断措辞是否明确，特别是「可能」「我觉得」「应该」这类弱化词<br>
+- 帮我看积极词是否太少，回答有没有体现主动性、热情和胜任感<br>
+- 帮我判断每段回答有没有正面回答问题，还是在绕
+      </div>
+    </div>
+
+    <!-- 面试：上传完整复盘提示词（高级） -->
+    <div class="section mode-interview">
+      <div class="section-header">
+        <span class="section-title">自定义复盘提示词（高级）</span>
+        <span class="section-badge badge-editable">可选</span>
+      </div>
+      <p class="section-desc">若你有自己成套的面试复盘提示词，可整段粘贴在这里。填了会<strong>完全替换</strong>内置的面试复盘模板（上面两栏将不再生效），留空则用内置模板。</p>
+      <textarea id="interview-report-prompt" rows="6" placeholder="留空即用内置面试复盘模板。&#10;若粘贴自己的提示词，将作为 system prompt 完全接管复盘输出。"></textarea>
+    </div>
+
+    <!-- 按钮 -->
+    <div class="btn-row">
+      <button class="btn-save" id="btn-save">保存规则</button>
+      <button class="btn-reset" id="btn-reset">恢复默认</button>
+    </div>
+    <div class="save-success" id="save-success">✓ 已保存，下次训练生效</div>
+  </div>
+
+  <script>
+    function toggleExample(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('show');
+    }
+
+    // 当前模式（从 URL query 读取）
+    const currentMode = new URLSearchParams(location.search).get('mode') === 'interview' ? 'interview' : 'expression';
+
+    // 表达模式字段 <-> DOM id 映射
+    const EXPRESSION_FIELDS = {
+      goals: 'goals',
+      customRules: 'custom-rules',
+      styleRef: 'style-ref',
+      customWords: 'custom-words'
+    };
+    // 面试模式字段 <-> DOM id 映射
+    const INTERVIEW_FIELDS = {
+      interviewGoals: 'interview-goals',
+      interviewFocus: 'interview-focus',
+      interviewReportPrompt: 'interview-report-prompt'
+    };
+
+    function applyMode() {
+      if (currentMode === 'interview') {
+        document.body.classList.add('mode-interview-active');
+        document.getElementById('page-title').textContent = '面试复盘定制';
+        document.getElementById('page-subtitle').textContent = '面试复盘的底层维度始终生效。你可以在上面补充目标岗位、复盘关注点，或整段替换复盘提示词。';
+      }
+    }
+
+    // 缓存完整数据，保存时合并，避免覆盖另一模式的字段
+    let allData = {};
+
+    async function loadCustomPrompt() {
+      allData = (await window.api.getCustomPrompt()) || {};
+      const fields = currentMode === 'interview' ? INTERVIEW_FIELDS : EXPRESSION_FIELDS;
+      for (const [key, domId] of Object.entries(fields)) {
+        const el = document.getElementById(domId);
+        if (el) el.value = allData[key] || '';
+      }
+    }
+
+    document.getElementById('btn-save').addEventListener('click', async () => {
+      const fields = currentMode === 'interview' ? INTERVIEW_FIELDS : EXPRESSION_FIELDS;
+      // 合并：只更新当前模式的字段，保留另一模式已存的内容
+      const merged = { ...allData };
+      for (const [key, domId] of Object.entries(fields)) {
+        const el = document.getElementById(domId);
+        if (el) merged[key] = el.value.trim();
+      }
+      allData = merged;
+      await window.api.saveCustomPrompt(merged);
+      const msg = document.getElementById('save-success');
+      msg.classList.add('show');
+      setTimeout(() => msg.classList.remove('show'), 2000);
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', async () => {
+      const label = currentMode === 'interview' ? '面试复盘' : '表达训练';
+      if (confirm(`确定要清空「${label}」的自定义内容吗？（另一模式的设置不受影响）`)) {
+        const fields = currentMode === 'interview' ? INTERVIEW_FIELDS : EXPRESSION_FIELDS;
+        const merged = { ...allData };
+        for (const [key, domId] of Object.entries(fields)) {
+          const el = document.getElementById(domId);
+          if (el) el.value = '';
+          merged[key] = '';
+        }
+        allData = merged;
+        await window.api.saveCustomPrompt(merged);
+        const msg = document.getElementById('save-success');
+        msg.textContent = '✓ 已恢复默认';
+        msg.classList.add('show');
+        setTimeout(() => { msg.classList.remove('show'); msg.textContent = '✓ 已保存，下次训练生效'; }, 2000);
+      }
+    });
+
+    document.getElementById('btn-back').addEventListener('click', () => {
+      if (window.api && window.api.closeWindow) {
+        window.api.closeWindow();
+      } else {
+        window.close();
+      }
+    });
+
+    applyMode();
+    loadCustomPrompt();
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "expression-trainer",
+  "version": "1.1.0",
+  "description": "说一句 - 表达训练系统",
+  "main": "main.js",
+  "scripts": {
+    "start": "node start.js",
+    "dev": "node start.js --dev",
+    "test": "node test/core.test.js"
+  },
+  "keywords": [
+    "expression",
+    "training",
+    "speech",
+    "asr",
+    "chinese"
+  ],
+  "author": "Liliane0310",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Liliane0310/shuoyiju.git"
+  },
+  "homepage": "https://github.com/Liliane0310/shuoyiju#readme",
+  "bugs": {
+    "url": "https://github.com/Liliane0310/shuoyiju/issues"
+  },
+  "devDependencies": {
+    "electron": "^33.4.11"
+  },
+  "dependencies": {
+    "sherpa-onnx-node": "^1.10.0",
+    "ws": "8.18.0"
+  }
+}

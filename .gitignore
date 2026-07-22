@@ -1,0 +1,37 @@
+# 依赖
+node_modules/
+
+# ASR 模型（体积大，用户按 README 自行下载）
+models/*.onnx
+models/*.tar.bz2
+models/sherpa-onnx-*/
+models/**/*.onnx
+models/**/*.tar.bz2
+
+# 打包产物
+dist/
+build/
+
+# 调试/临时文件
+debug.log
+*.log
+temp-book.epub
+temp-*.epub
+
+# 参考资料（仅本地使用，不进仓库）
+参考书籍/
+
+# Claude Code 本地配置
+.claude/
+
+# 其他本地 Agent 配置
+.agents/
+.codex/
+.uploads/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 本地设置（含 API Key，绝不提交）
+settings.json

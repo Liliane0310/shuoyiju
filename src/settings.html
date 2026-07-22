@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设置</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      padding: 40px 32px 32px;
+      display: block;
+      overflow-y: auto;
+      -webkit-app-region: drag;
+    }
+
+    .settings-container {
+      -webkit-app-region: no-drag;
+      max-width: 640px;
+    }
+
+    h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .settings-container::before {
+      content: "SETTINGS";
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--mute);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .form-group select,
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--paper);
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      color: var(--ink);
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      outline: none;
+      transition: box-shadow 0.15s;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+      box-shadow: inset 0 0 0 1px var(--ink);
+    }
+
+    .form-group input::placeholder {
+      color: var(--mute);
+    }
+
+    /* 密码显示/隐藏切换 */
+    .input-reveal {
+      position: relative;
+    }
+
+    .input-reveal input {
+      padding-right: 44px;
+    }
+
+    .reveal-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--mute);
+      transition: color 0.15s;
+    }
+
+    .reveal-toggle:hover {
+      color: var(--ink);
+    }
+
+    .reveal-toggle::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background-color: currentColor;
+      -webkit-mask: var(--eye-icon) center / contain no-repeat;
+      mask: var(--eye-icon) center / contain no-repeat;
+    }
+
+    /* 默认（隐藏状态）：显示「眼睛」图标，点击可查看 */
+    .reveal-toggle {
+      --eye-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+    }
+
+    /* 显示状态：显示「划掉的眼睛」图标，点击可隐藏 */
+    .reveal-toggle[aria-pressed="true"] {
+      --eye-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68'/%3E%3Cpath d='M6.61 6.61A13.5 13.5 0 0 0 2 12s3.5 7 10 7a9.12 9.12 0 0 0 4.4-1.11'/%3E%3Cpath d='M14.12 14.12a3 3 0 1 1-4.24-4.24'/%3E%3Cline x1='2' y1='2' x2='22' y2='22'/%3E%3C/svg%3E");
+    }
+
+    .form-group .hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--mute);
+      margin-top: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    .conditional {
+      display: none;
+    }
+
+    .conditional.visible {
+      display: block;
+    }
+
+    .btn-save {
+      width: 100%;
+      padding: 13px;
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: all 0.15s;
+    }
+
+    .btn-save:hover {
+      background: transparent;
+      color: var(--ink);
+    }
+
+    /* 麦克风自检 */
+    .btn-mic-test {
+      width: 100%;
+      padding: 11px;
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-mic-test:hover { background: var(--ink); color: var(--paper); }
+    .btn-mic-test.testing { background: var(--ink); color: var(--paper); }
+
+    .mic-test-panel {
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid var(--ink);
+    }
+    .mic-vol-bar {
+      height: 10px;
+      background: var(--paper-2, #F5EEB8);
+      border: 1px solid var(--ink);
+      overflow: hidden;
+    }
+    .mic-vol-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--ink);
+      transition: width 0.08s linear;
+    }
+    .mic-test-result {
+      margin-top: 10px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      color: var(--ink);
+      min-height: 22px;
+      line-height: 1.5;
+    }
+    .mic-test-result.ok { color: var(--accent-green, #2E6E4E); }
+    .mic-test-result.err { color: var(--accent-red, #53131E); }
+
+    .save-success {
+      text-align: center;
+      color: var(--accent-green);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      margin-top: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .save-success.show {
+      opacity: 1;
+    }
+
+    .model-presets {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--mute);
+      margin-top: 6px;
+    }
+
+    .section-divider {
+      margin: 28px 0;
+      border-top: 1px solid var(--line);
+      position: relative;
+    }
+
+    .section-divider::before {
+      content: "ASR 语音模型";
+      position: absolute;
+      top: -10px;
+      left: 0;
+      background: var(--paper);
+      padding-right: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--mute);
+    }
+
+    .asr-model-option {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .asr-model-option:last-child {
+      border-bottom: none;
+    }
+
+    .asr-model-option:hover {
+      background: var(--paper-2);
+    }
+
+    .asr-model-option.selected {
+      background: var(--paper-2);
+    }
+
+    .asr-model-option.selected .model-name::before {
+      content: "● ";
+      color: var(--ink);
+    }
+
+    .asr-model-option .model-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+
+    .asr-model-option .model-name .badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      margin-left: 8px;
+      letter-spacing: 0.08em;
+      vertical-align: middle;
+      border: 1px solid var(--mute);
+      color: var(--mute);
+    }
+
+    .asr-model-option .model-name .badge.recommended {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: var(--paper-2);
+    }
+
+    .asr-model-option .model-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--mute);
+      line-height: 1.5;
+      padding-left: 14px;
+    }
+
+    .asr-model-option.unavailable {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .asr-model-option.unavailable .model-name::after {
+      content: "未安装";
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      margin-left: 8px;
+      letter-spacing: 0.08em;
+      vertical-align: middle;
+      border: 1px dashed var(--mute);
+      color: var(--mute);
+    }
+
+    .asr-models-list {
+      border: 1px solid var(--ink);
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .asr-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--mute);
+      margin-top: 8px;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+    }
+
+    .asr-hint a {
+      color: var(--ink);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <h1><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.18em;margin-right:8px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>设置</h1>
+
+    <div class="form-group">
+      <label>AI 后端</label>
+      <select id="provider">
+        <option value="openai">OpenAI</option>
+        <option value="deepseek">DeepSeek（推荐）</option>
+        <option value="ollama">Ollama（本地）</option>
+        <option value="custom">自定义 OpenAI 兼容</option>
+      </select>
+    </div>
+
+    <div class="form-group conditional" id="group-apikey">
+      <label>API Key</label>
+      <div class="input-reveal">
+        <input type="password" id="apikey" placeholder="输入你的 API Key">
+        <button type="button" class="reveal-toggle" data-target="apikey" aria-label="显示/隐藏 API Key" aria-pressed="false"></button>
+      </div>
+      <div class="hint" id="apikey-hint">在 platform.deepseek.com 获取</div>
+    </div>
+
+    <div class="form-group">
+      <label>模型</label>
+      <select id="model">
+        <!-- 动态填充 -->
+      </select>
+      <div class="model-presets" id="model-hint"></div>
+    </div>
+
+    <div class="form-group conditional" id="group-ollama">
+      <label>Ollama 地址</label>
+      <input type="text" id="ollama-url" placeholder="http://localhost:11434">
+    </div>
+
+    <div class="form-group conditional" id="group-custom">
+      <label>自定义 Base URL / Endpoint</label>
+      <input type="text" id="custom-endpoint" placeholder="https://api.example.com/v1 或 https://api.example.com/v1/chat/completions">
+    </div>
+
+    <div class="form-group conditional" id="group-custom-model">
+      <label>自定义模型名</label>
+      <input type="text" id="custom-model" placeholder="model-name">
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="form-group">
+      <label>语音识别引擎</label>
+      <select id="asr-engine">
+        <option value="local">本地（离线，免费，隐私）</option>
+        <option value="volcano">火山引擎（云端流式，识别率更高）</option>
+      </select>
+    </div>
+
+    <!-- 本地引擎：模型选择 -->
+    <div class="form-group" id="group-local-asr">
+      <label>本地识别模型</label>
+      <div class="asr-models-list" id="asr-models-list">
+        <!-- 动态填充 -->
+      </div>
+      <div class="asr-hint" id="asr-hint">
+        模型文件放置在应用 models/ 目录下。下载更多模型：
+        <a href="https://github.com/k2-fsa/sherpa-onnx/releases/" target="_blank">sherpa-onnx releases</a>
+      </div>
+    </div>
+
+    <!-- 火山云端引擎：凭证 -->
+    <div class="form-group conditional" id="group-volcano">
+      <label>火山引擎凭证</label>
+      <input type="text" id="volc-app-key" placeholder="App Key（App ID）" style="margin-bottom:10px;">
+      <div class="input-reveal" style="margin-bottom:10px;">
+        <input type="password" id="volc-access-key" placeholder="Access Key（Access Token）">
+        <button type="button" class="reveal-toggle" data-target="volc-access-key" aria-label="显示/隐藏 Access Key" aria-pressed="false"></button>
+      </div>
+      <input type="text" id="volc-resource-id" placeholder="Resource ID（默认 volc.bigasr.sauc.duration）">
+      <div class="asr-hint">
+        在
+        <a href="https://console.volcengine.com/speech/app" target="_blank">火山引擎语音控制台</a>
+        开通「流式语音识别大模型」后获取。<br>
+        ⚠ 使用云端引擎时，麦克风音频会实时上传到火山引擎服务器进行识别。
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- 麦克风 & 识别自检 -->
+    <div class="form-group">
+      <label>麦克风 & 识别自检</label>
+      <button type="button" class="btn-mic-test" id="btn-mic-test">开始测试（说一句话）</button>
+      <div class="mic-test-panel" id="mic-test-panel" style="display:none;">
+        <div class="mic-vol-bar"><div class="mic-vol-fill" id="mic-vol-fill"></div></div>
+        <div class="mic-test-result" id="mic-test-result">请对着麦克风说话…</div>
+      </div>
+      <div class="hint">先保存设置，再测试当前选择的识别引擎是否正常工作。</div>
+    </div>
+
+    <button class="btn-save" id="btn-save">保存设置</button>
+    <div class="save-success" id="save-success">✓ 已保存</div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>

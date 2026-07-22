@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>说一句</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 洋红闪烁边框 -->
+  <div class="glow-border"></div>
+
+  <!-- 主布局：三列 -->
+  <div class="layout">
+    <!-- 左栏：表达分析 / 面试准备 -->
+    <aside class="panel-left">
+      <!-- 模式切换 -->
+      <div class="mode-switch">
+        <button id="btn-mode-expression" class="mode-btn active">表达训练</button>
+        <button id="btn-mode-interview" class="mode-btn">面试练习</button>
+      </div>
+
+      <!-- 表达训练面板（原有） -->
+      <div id="expression-panel" class="panel-content">
+        <div class="panel-title"><svg class="ic" width="16" height="16" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>表达分析</div>
+        <div class="stat-row">
+          <span class="stat-label">笼统词</span>
+          <span id="stat-vague" class="stat-value stat-red">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">填充词</span>
+          <span id="stat-fillers" class="stat-value stat-orange">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">犹豫词</span>
+          <span id="stat-hedges" class="stat-value stat-yellow">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">表达密度</span>
+          <span id="stat-density" class="stat-value stat-green">--</span>
+        </div>
+      </div>
+
+      <!-- 面试练习面板（新增） -->
+      <div id="interview-panel" class="panel-content hidden">
+        <!-- 面板头部：可收起 -->
+        <div class="panel-title" id="interview-panel-header">
+          <span><svg class="ic" width="16" height="16" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>面试准备</span>
+          <button id="btn-toggle-cards" class="btn-icon-sm" title="收起/展开">
+            <svg class="ic" width="14" height="14" viewBox="0 0 24 24">
+              <polyline points="18 15 12 9 6 15"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 可收起的内容区 -->
+        <div id="interview-content" class="interview-content">
+          <!-- 上传/编辑区 -->
+          <div id="interview-input-section">
+            <textarea id="interview-textarea" class="interview-prep-input" placeholder="粘贴面试题目、自我介绍或项目经历..."></textarea>
+            <button id="btn-analyze-interview" class="btn-sm" style="width:100%;">分析文本</button>
+          </div>
+
+          <!-- 分析结果卡片 -->
+          <div id="interview-cards" class="hidden">
+            <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <span id="interview-type" class="interview-tag">题型：项目经历</span>
+              <button id="btn-edit-script" class="btn-sm" title="返回原文输入区修改后重新分析">返回修改</button>
+            </div>
+            <div id="interview-question-display" class="interview-question-display hidden">
+              <div class="interview-question-label">本次面试问题</div>
+              <div id="interview-question-text" class="interview-question-text"></div>
+            </div>
+            <div id="cards-container" class="cards-container">
+              <!-- 动态生成卡片 -->
+            </div>
+            <div class="interview-prep-actions">
+              <button id="btn-repeat-interview" class="btn-sm">再练一次这道题</button>
+              <button id="btn-new-interview" class="btn-sm">开始新问题</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 面试统计（始终显示） -->
+        <div class="interview-stats">
+          <div class="stat-row">
+            <span class="stat-label">弱化表达率</span>
+            <span id="stat-weak-rate" class="stat-value stat-red">--</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">积极词</span>
+            <span id="stat-positive" class="stat-value stat-green">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">弱化词</span>
+            <span id="stat-weak" class="stat-value stat-red">0</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 中间：主内容区 -->
+    <main class="main-area">
+      <!-- 顶部栏 -->
+      <div class="topbar">
+        <span class="app-title">说一句</span>
+        <div class="topbar-right">
+          <span id="timer" class="timer">00:00</span>
+          <button id="btn-history" class="btn-icon" title="训练历史"><svg class="ic" width="20" height="20" viewBox="0 0 24 24"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg></button>
+          <button id="btn-prompt-editor" class="btn-icon" title="训练规则"><svg class="ic" width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg></button>
+          <button id="btn-settings" class="btn-icon" title="设置"><svg class="ic" width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+        </div>
+      </div>
+
+      <!-- 字幕区顶部工具栏 -->
+      <div class="subtitle-topbar">
+        <button id="btn-paste" class="btn-sm btn-paste-top">
+          <svg class="ic" width="14" height="14" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> 粘贴逐字稿
+        </button>
+        <div class="subtitle-topbar-right">
+          <button id="btn-copy-text" class="btn-sm hidden" title="复制原文"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制</button>
+          <button id="btn-save-text" class="btn-sm hidden" title="保存原文"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> 保存</button>
+          <button id="btn-clear" class="btn-sm hidden" title="清空"><svg class="ic" width="14" height="14" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> 清空</button>
+        </div>
+      </div>
+
+      <!-- 字幕滚动区 -->
+      <div id="subtitle-scroll" class="subtitle-scroll">
+        <div id="subtitle-container" class="subtitle-container">
+          <div class="subtitle-line hint">点击下方按钮开始说话</div>
+        </div>
+      </div>
+
+      <!-- 底部按钮（只保留核心操作） -->
+      <div class="action-bar">
+        <button id="btn-start" class="btn-main btn-start">
+          <svg class="ic btn-icon-inner" width="15" height="15" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          <span class="btn-label">开始录制</span>
+        </button>
+        <button id="btn-pause" class="btn-main btn-pause hidden">
+          <svg class="ic btn-icon-inner" width="15" height="15" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          <span class="btn-label">暂停</span>
+        </button>
+        <button id="btn-resume" class="btn-main btn-resume hidden">
+          <svg class="ic btn-icon-inner" width="15" height="15" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg>
+          <span class="btn-label">继续</span>
+        </button>
+        <button id="btn-stop" class="btn-main btn-stop hidden">
+          <svg class="ic btn-icon-inner" width="15" height="15" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="1"/></svg>
+          <span class="btn-label">结束</span>
+        </button>
+        <button id="btn-report" class="btn-main btn-report hidden">
+          <svg class="ic btn-icon-inner" width="15" height="15" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          <span class="btn-label">生成报告</span>
+        </button>
+      </div>
+    </main>
+
+    <!-- 右栏：实时反馈 -->
+    <aside class="panel-right">
+      <div class="panel-title"><svg class="ic" width="16" height="16" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>实时反馈</div>
+      <div id="feedback-content" class="feedback-content">
+        <!-- 实时反馈内容 -->
+      </div>
+    </aside>
+  </div>
+
+  <!-- 耳机DJ少女 icon -->
+  <div class="girl-icon">
+    <svg width="44" height="44" viewBox="0 0 70 70" fill="none">
+      <path d="M16 32 Q16 14 35 12 Q54 14 54 32" stroke="#E5007E" stroke-width="2.5" fill="none"/>
+      <rect x="12" y="30" width="7" height="12" rx="3" fill="#E5007E" opacity="0.6"/>
+      <rect x="51" y="30" width="7" height="12" rx="3" fill="#E5007E" opacity="0.6"/>
+      <circle cx="35" cy="38" r="14" stroke="#E5007E" stroke-width="2" fill="none"/>
+      <path d="M28 36 Q32 33 36 36" stroke="#E5007E" stroke-width="1.5" fill="none"/>
+      <path d="M38 36 Q41 34 44 37" stroke="#E5007E" stroke-width="1.5" fill="none"/>
+      <circle cx="32" cy="35.5" r="1.2" fill="#E5007E"/>
+      <path d="M31 43 Q35 46 39 43" stroke="#E5007E" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- 粘贴逐字稿弹窗 -->
+  <div id="paste-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><svg class="ic" width="20" height="20" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>粘贴逐字稿</h2>
+        <button id="btn-close-paste" class="btn-close">×</button>
+      </div>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:12px;">
+        <p style="color:var(--mute);font-size:13px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;">把逐字稿粘贴进来，我帮你分析</p>
+        <textarea id="paste-textarea" placeholder="在这里粘贴文字..." style="flex:1;min-height:300px;background:var(--paper);border:1px solid var(--ink);border-radius:0;padding:16px;color:var(--ink);font-size:16px;line-height:1.8;resize:none;font-family:'Noto Serif SC',serif;"></textarea>
+        <button id="btn-analyze-paste" style="display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:0;padding:12px 22px;font-size:13px;font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;cursor:pointer;align-self:flex-end;"><svg class="ic" width="15" height="15" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 开始分析</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 报告弹窗 -->
+  <div id="report-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><svg class="ic" width="20" height="20" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>表达分析报告</h2>
+        <div class="modal-header-actions">
+          <button id="btn-copy-report" class="btn-sm"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制全文</button>
+          <button id="btn-close-report" class="btn-close">×</button>
+        </div>
+      </div>
+      <div id="report-body" class="modal-body">
+      </div>
+    </div>
+  </div>
+
+  <!-- 训练历史弹窗 -->
+  <div id="history-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><svg class="ic" width="20" height="20" viewBox="0 0 24 24"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>训练历史</h2>
+        <div class="modal-header-actions">
+          <button id="btn-clear-history" class="btn-sm" title="清空全部历史"><svg class="ic" width="13" height="13" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> 清空</button>
+          <button id="btn-close-history" class="btn-close">×</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <!-- 模式过滤 -->
+        <div class="history-filter">
+          <button class="history-filter-btn active" data-filter="all">全部</button>
+          <button class="history-filter-btn" data-filter="expression">表达训练</button>
+          <button class="history-filter-btn" data-filter="interview">面试练习</button>
+        </div>
+
+        <!-- 成长趋势图 -->
+        <div id="history-trend" class="history-trend"></div>
+
+        <!-- 记录列表 -->
+        <div id="history-list" class="history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
