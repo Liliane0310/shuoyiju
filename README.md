@@ -116,7 +116,9 @@ npm start
 
 ## 词库说明
 
-`data/emotion-lexicon.json` 基于大连理工情感词库7大类结构，包含：
+### 表达训练词库（`data/emotion-lexicon.json` + `data/tiered-lexicon.json`）
+
+`emotion-lexicon.json` 基于大连理工情感词库7大类结构，包含：
 
 - **130+ 情绪词**：分类（喜怒哀惧恶惊）+ 强度（1-9）
 - **笼统词→精准词映射**：25组高频替代建议
@@ -125,6 +127,25 @@ npm start
 - **程度词梯度**：弱→中→强→极 四级
 - **画面化描述**：10组「抽象→具象」转换
 - **犹豫→直接转换**：8组对照示例
+
+### 面试词库（`data/interview-lexicon.json`）
+
+面试练习模式专用词库，由 `lib/lexicon.js` 加载使用，融合六类来源：
+
+| 来源 | 说明 |
+|------|------|
+| Hedging 语言学 | Lakoff 1972 / Hyland 1998——模糊限制语降低能力感知 |
+| Russell 情绪环形模型 | 效价(valence) × 唤醒度(arousal) 四象限 |
+| Fiske 刻板印象内容模型 | warmth × competence 两维度印象形成 |
+| STAR 法则 / 行为面试法 BBI | 过去行为预测未来行为 |
+| 《终极面试问答》琳恩·威廉斯 | 面试官三大基本问题、六大核心特质 |
+| 《500强企业面试题与面试流程全记录》鲁克德 | 16家500强选人标准、经典面试题 |
+
+包含 15 个分类：`confidenceMap`（弱化词→自信替代）、`emotionCircumplex`、`impressionDimensions`、`professionalVerbs`、`structureHints`、`weakWords` / `positiveWords` / `lowValueWords` / `powerWords`、`quantifierHints`、`interviewFramework`、`jobCategoryFocus`、`interviewQuestionTypes`、`fortune500Standards`、`interviewMethods`。
+
+### 面试知识库（`data/interview-knowledge-base.json`）
+
+上述两本面试书的结构化提炼，作为面试模块生成分析框架和报告模板时的知识背景素材，包含面试官三大基本问题、六大核心特质、岗位分类面试法、500强选人标准与黄金忠告等。
 
 ## 开发
 
