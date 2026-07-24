@@ -157,34 +157,37 @@ npm run dev
 npm test
 ```
 
-# 目录结构
-├── main.js              # Electron主进程
-├── preload.js           # preload脚本
-├── start.js             # 启动器（清除 ELECTRON_RUN_AS_NODE 后拉起 Electron）
+## 目录结构
+
+```
+shuoyiju/
+├── main.js                # Electron 主进程
+├── preload.js             # preload 脚本
+├── start.js               # 启动器（清除 ELECTRON_RUN_AS_NODE 后拉起 Electron）
 ├── src/
-│   ├── index.html       # 主界面
-│   ├── settings.html    # 设置页
+│   ├── index.html         # 主界面
+│   ├── settings.html      # 设置页
 │   ├── prompt-editor.html # 训练规则定制页
-│   ├── lexicon-playground.html # 词库调试页
-│   ├── styles.css       # 样式
-│   ├── app.js           # 前端逻辑
-│   └── settings.js      # 设置逻辑
+│   ├── lexicon-playground.html  # 词库调试页
+│   ├── styles.css         # 样式
+│   ├── app.js             # 前端逻辑
+│   └── settings.js        # 设置逻辑
 ├── lib/
-│   ├── asr.js           # 本地语音识别（Sherpa-ONNX）
-│   ├── asr-volcano.js   # 火山引擎云端流式识别
-│   ├── lexicon.js       # 词库匹配 + 犹豫词语境判别
-│   ├── ai-feedback.js   # AI反馈（多后端）
-│   ├── feedback-pool.js # 误判反馈池（本地存档，供后续优化）
-│   └── prompts.js       # Prompt模板
+│   ├── asr.js             # 本地语音识别（Sherpa-ONNX）
+│   ├── asr-volcano.js     # 火山引擎云端流式识别
+│   ├── lexicon.js         # 词库匹配 + 犹豫词语境判别
+│   ├── ai-feedback.js     # AI 反馈（多后端）
+│   ├── feedback-pool.js   # 误判反馈池（本地存档，供后续优化）
+│   └── prompts.js         # Prompt 模板
 ├── data/
 │   ├── emotion-lexicon.json
 │   ├── interview-lexicon.json
 │   ├── interview-knowledge-base.json
 │   └── tiered-lexicon.json
 ├── test/
-│   └── core.test.js     # 核心逻辑测试
-├── models/              # Sherpa-ONNX模型（需下载，已 gitignore）
-└── settings.example.json # 设置示例（真实 settings.json 含 API Key，已 gitignore）
+│   └── core.test.js       # 核心逻辑测试
+├── models/                # Sherpa-ONNX 模型（需下载，已 gitignore）
+└── settings.example.json  # 设置示例（真实 settings.json 含 API Key，已 gitignore）
 ```
 
 ## 系统要求
