@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="400" viewBox="0 0 1200 400"
+     role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">说一句 · 本地离线的口语表达精度训练器</title>
+  <desc id="hero-desc">Field Guide 风格封面。左侧:项目名「说一句」加一句话说明,把含糊表达改成有力表达。右侧:一段真实字幕示例展示项目机制——填充词标波浪下划线、犹豫词标虚线下划线、笼统词用深酒红反白高亮块。</desc>
+
+  <defs>
+    <pattern id="paper-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#53131E" stroke-width="0.4" stroke-opacity="0.06"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="400" fill="#FFFACC"/>
+  <rect width="1200" height="400" fill="url(#paper-grid)"/>
+
+  <g id="edge-marks" fill="none" stroke="#53131E" stroke-width="1.4">
+    <path d="M 40 40 L 40 68 M 40 40 L 68 40"/>
+    <path d="M 1160 40 L 1160 68 M 1160 40 L 1132 40"/>
+    <path d="M 40 360 L 40 332 M 40 360 L 68 360"/>
+    <path d="M 1160 360 L 1160 332 M 1160 360 L 1132 360"/>
+  </g>
+
+  <g id="title-block" fill="#53131E">
+    <text x="72" y="118" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="18" font-weight="500" fill="#5A464C" letter-spacing="4">FIELD GUIDE · No.001</text>
+    <text x="72" y="142" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="18" font-weight="500" fill="#5A464C" letter-spacing="4">表达训练 · EXPRESSION TRAINER</text>
+    <line x1="72" y1="160" x2="240" y2="160" stroke="#53131E" stroke-width="1.5"/>
+
+    <text x="68" y="248" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="120" font-weight="900" letter-spacing="6">说一句</text>
+
+    <text x="72" y="304" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="26" font-weight="500">把「嗯,我觉得那个可能还行」</text>
+    <text x="72" y="336" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="26" font-weight="500">改成「这版方案我拍板」的桌面工具。</text>
+  </g>
+
+  <g id="proof-card" transform="translate(628 70)">
+    <rect x="0" y="0" width="520" height="288" rx="6" fill="#F5EEB8" stroke="#53131E" stroke-width="1.5"/>
+
+    <g font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace">
+      <text x="22" y="34" font-size="14" fill="#5A464C" letter-spacing="3">LIVE SUBTITLE · 00:12</text>
+      <circle cx="484" cy="30" r="4" fill="#53131E"/>
+      <text x="474" y="34" font-size="13" font-weight="700" fill="#53131E" text-anchor="end">REC</text>
+      <line x1="22" y1="50" x2="498" y2="50" stroke="#53131E" stroke-width="0.8" stroke-opacity="0.3"/>
+    </g>
+
+    <g font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="30" font-weight="700" fill="#53131E">
+      <text>
+        <tspan x="22" y="112">然后</tspan>
+        <tspan x="94" y="112" id="w-filler">嗯</tspan>
+        <tspan x="128" y="112">,</tspan>
+        <tspan x="144" y="112" fill="#5A464C" id="w-hedge">我觉得</tspan>
+        <tspan x="238" y="112">那个方案</tspan>
+        <tspan x="362" y="112" fill="#5A464C" id="w-hedge2">可能</tspan>
+        <tspan x="428" y="112">还</tspan>
+      </text>
+      <text>
+        <tspan x="22" y="176">行,方案</tspan>
+      </text>
+    </g>
+
+    <g id="annotations">
+      <path d="M 92 122 q 4.5 -7 9 0 t 9 0 t 9 0" fill="none" stroke="#53131E" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="144" y1="122" x2="236" y2="122" stroke="#5A464C" stroke-width="1.8" stroke-dasharray="5 3"/>
+      <line x1="362" y1="122" x2="428" y2="122" stroke="#5A464C" stroke-width="1.8" stroke-dasharray="5 3"/>
+
+      <rect x="148" y="150" width="200" height="42" fill="#53131E" rx="2"/>
+      <text x="248" y="184" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="30" font-weight="900" fill="#FFFACC" text-anchor="middle">不错的吧</text>
+
+      <text x="360" y="184" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="30" font-weight="700" fill="#53131E">,大家看看。</text>
+    </g>
+
+    <line x1="22" y1="212" x2="498" y2="212" stroke="#53131E" stroke-width="0.6" stroke-opacity="0.25"/>
+
+    <g font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="18" fill="#5A464C">
+      <path d="M 30 238 q 4.5 -6 9 0 t 9 0" fill="none" stroke="#53131E" stroke-width="2" stroke-linecap="round"/>
+      <text x="60" y="242" fill="#53131E" font-weight="700" font-size="18">填充词</text>
+      <text x="60" y="264" font-size="14">嗯 · 那个 · 然后</text>
+
+      <line x1="212" y1="234" x2="252" y2="234" stroke="#5A464C" stroke-width="1.6" stroke-dasharray="4 3"/>
+      <text x="260" y="242" fill="#53131E" font-weight="700" font-size="18">犹豫词</text>
+      <text x="260" y="264" font-size="14">可能 · 我觉得</text>
+
+      <rect x="404" y="228" width="52" height="20" fill="#53131E" rx="1.5"/>
+      <text x="430" y="243" fill="#FFFACC" text-anchor="middle" font-weight="700" font-size="14">笼统</text>
+      <text x="404" y="264" font-size="14">→ 精准替代</text>
+    </g>
+  </g>
+
+  <g id="footer-meta" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="16" fill="#5A464C" letter-spacing="2">
+    <line x1="72" y1="376" x2="1128" y2="376" stroke="#53131E" stroke-width="0.6" stroke-opacity="0.35"/>
+    <text x="72" y="392">v1.1.0</text>
+    <text x="160" y="392">ELECTRON</text>
+    <text x="280" y="392">SHERPA-ONNX · 本地离线</text>
+    <text x="1128" y="392" text-anchor="end">MIT</text>
+  </g>
+</svg>

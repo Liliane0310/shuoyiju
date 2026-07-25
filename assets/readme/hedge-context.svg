@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="520" viewBox="0 0 1200 520"
+     role="img" aria-labelledby="hc-title hc-desc">
+  <title id="hc-title">犹豫词语境判别规则示意</title>
+  <desc id="hc-desc">机制图。规则:「可能/也许/大概/应该/好像/似乎/或许」后 8 字内出现客观语境词(结果、产品、系统、波动、失败……)时,降级为客观陈述,不计入弱化表达。「我觉得」不参与降级。图分两栏对照三个真实例句:左栏「我觉得可能不太行」判为主观弱化;中栏「结果可能波动」降级为客观陈述;右栏「我觉得那个方案可能失败」按规则拆开——「我觉得」计入弱化、「可能失败」降级。</desc>
+
+  <defs>
+    <pattern id="hc-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#53131E" stroke-width="0.4" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="520" fill="#FFFACC"/>
+  <rect width="1200" height="520" fill="url(#hc-grid)"/>
+
+  <g id="header">
+    <text x="72" y="60" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="16" fill="#5A464C" letter-spacing="4">RULE · lib/lexicon.js</text>
+    <text x="72" y="102" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="34" font-weight="900" fill="#53131E">犹豫词到底算不算「你在退缩」?看后 8 个字。</text>
+    <line x1="72" y1="118" x2="620" y2="118" stroke="#53131E" stroke-width="1.5"/>
+    <text x="72" y="150" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="18" fill="#5A464C">
+      语境敏感词后 8 字内命中「结果 · 产品 · 系统 · 波动 · 失败」等 50+ 客观语境词,自动降级为客观陈述。
+    </text>
+    <text x="72" y="176" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="18" fill="#5A464C">
+      「我觉得」是主观信号,不参与降级。
+    </text>
+  </g>
+
+  <g id="case-a" transform="translate(72 216)">
+    <rect x="0" y="0" width="340" height="256" rx="6" fill="#F5EEB8" stroke="#53131E" stroke-width="1.5"/>
+    <text x="20" y="30" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" fill="#5A464C" letter-spacing="3">CASE · A</text>
+    <text x="320" y="30" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" font-weight="700" fill="#53131E" text-anchor="end" letter-spacing="2">主观弱化</text>
+    <line x1="20" y1="42" x2="320" y2="42" stroke="#53131E" stroke-width="0.8" stroke-opacity="0.35"/>
+
+    <text x="20" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="24" font-weight="700" fill="#5A464C">我觉得</text>
+    <text x="128" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="24" font-weight="700" fill="#5A464C">可能</text>
+    <text x="200" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="24" font-weight="700" fill="#53131E">不太行。</text>
+    <line x1="20" y1="102" x2="106" y2="102" stroke="#5A464C" stroke-width="1.6" stroke-dasharray="4 3"/>
+    <line x1="128" y1="102" x2="180" y2="102" stroke="#5A464C" stroke-width="1.6" stroke-dasharray="4 3"/>
+
+    <g font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12" fill="#5A464C">
+      <text x="20" y="140">「我觉得」→ 纯主观,记 1 次</text>
+      <text x="20" y="160">「可能」后跟「不太行」</text>
+      <text x="20" y="180">→ 非客观语境词,不降级</text>
+    </g>
+    <line x1="20" y1="204" x2="320" y2="204" stroke="#53131E" stroke-width="0.6" stroke-opacity="0.35"/>
+    <text x="20" y="230" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="16" font-weight="700" fill="#53131E">判定:2 次弱化</text>
+  </g>
+
+  <g id="case-b" transform="translate(430 216)">
+    <rect x="0" y="0" width="340" height="256" rx="6" fill="#F5EEB8" stroke="#53131E" stroke-width="1.5"/>
+    <text x="20" y="30" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" fill="#5A464C" letter-spacing="3">CASE · B</text>
+    <text x="320" y="30" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" font-weight="700" fill="#53131E" text-anchor="end" letter-spacing="2">客观陈述</text>
+    <line x1="20" y1="42" x2="320" y2="42" stroke="#53131E" stroke-width="0.8" stroke-opacity="0.35"/>
+
+    <text x="20" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="24" font-weight="700" fill="#53131E">结果</text>
+    <text x="80" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="24" font-weight="700" fill="#5A464C">可能</text>
+    <text x="152" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="24" font-weight="700" fill="#53131E">波动,请预留缓冲。</text>
+    <rect x="16" y="66" width="52" height="30" fill="none" stroke="#53131E" stroke-width="1.4" stroke-dasharray="3 2"/>
+    <rect x="150" y="66" width="52" height="30" fill="none" stroke="#53131E" stroke-width="1.4" stroke-dasharray="3 2"/>
+    <path d="M 68 82 Q 108 62 148 82" fill="none" stroke="#53131E" stroke-width="1.5"/>
+    <text x="108" y="60" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#53131E" text-anchor="middle" letter-spacing="1">≤ 8 字</text>
+
+    <g font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12" fill="#5A464C">
+      <text x="20" y="140">「可能」后 8 字内命中「波动」</text>
+      <text x="20" y="160">→ 客观语境词</text>
+      <text x="20" y="180">→ 降级为客观陈述</text>
+    </g>
+    <line x1="20" y1="204" x2="320" y2="204" stroke="#53131E" stroke-width="0.6" stroke-opacity="0.35"/>
+    <text x="20" y="230" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="16" font-weight="700" fill="#53131E">判定:0 次弱化</text>
+  </g>
+
+  <g id="case-c" transform="translate(788 216)">
+    <rect x="0" y="0" width="340" height="256" rx="6" fill="#F5EEB8" stroke="#53131E" stroke-width="1.5"/>
+    <text x="20" y="30" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" fill="#5A464C" letter-spacing="3">CASE · C</text>
+    <text x="320" y="30" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" font-weight="700" fill="#53131E" text-anchor="end" letter-spacing="2">混合</text>
+    <line x1="20" y1="42" x2="320" y2="42" stroke="#53131E" stroke-width="0.8" stroke-opacity="0.35"/>
+
+    <text x="20" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="22" font-weight="700" fill="#5A464C">我觉得</text>
+    <text x="120" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="22" font-weight="700" fill="#53131E">这方案</text>
+    <text x="220" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="22" font-weight="700" fill="#5A464C">可能</text>
+    <text x="20" y="126" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="22" font-weight="700" fill="#53131E">失败。</text>
+    <line x1="20" y1="102" x2="98" y2="102" stroke="#5A464C" stroke-width="1.6" stroke-dasharray="4 3"/>
+
+    <g font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12" fill="#5A464C">
+      <text x="20" y="160">「我觉得」→ 计 1 次弱化</text>
+      <text x="20" y="180">「可能」后命中「失败」</text>
+      <text x="20" y="200">→ 降级为客观陈述,不计</text>
+    </g>
+    <line x1="20" y1="216" x2="320" y2="216" stroke="#53131E" stroke-width="0.6" stroke-opacity="0.35"/>
+    <text x="20" y="240" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="16" font-weight="700" fill="#53131E">判定:1 次弱化</text>
+  </g>
+</svg>

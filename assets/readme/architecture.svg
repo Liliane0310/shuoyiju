@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="580" viewBox="0 0 1200 580"
+     role="img" aria-labelledby="arch-title arch-desc">
+  <title id="arch-title">说一句 · 技术架构</title>
+  <desc id="arch-desc">系统架构图。声音从麦克风进入 Electron 主进程,由 Sherpa-ONNX 本地识别或火山引擎云端流式识别转成文字;主进程用词库(emotion/interview/tiered)做匹配、跑犹豫词语境判别、写入误判反馈池、按需调用 AI 后端(OpenAI/DeepSeek/Ollama/自定义 OpenAI 兼容);渲染进程展示实时字幕、左侧统计面板、右侧 AI 反馈、生成分析报告和训练历史。数据全部落在本地 userData。</desc>
+
+  <defs>
+    <pattern id="arch-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#53131E" stroke-width="0.4" stroke-opacity="0.05"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#53131E"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="580" fill="#FFFACC"/>
+  <rect width="1200" height="580" fill="url(#arch-grid)"/>
+
+  <g id="header">
+    <text x="72" y="56" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="16" fill="#5A464C" letter-spacing="4">ARCHITECTURE · v1.1.0</text>
+    <text x="72" y="98" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="34" font-weight="900" fill="#53131E">从麦克风到复盘报告的完整路径。</text>
+    <line x1="72" y1="114" x2="600" y2="114" stroke="#53131E" stroke-width="1.5"/>
+    <text x="1128" y="98" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="14" fill="#5A464C" text-anchor="end" letter-spacing="2">ELECTRON · Node 18+</text>
+  </g>
+
+  <g id="layer-labels" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" fill="#5A464C" letter-spacing="3">
+    <text x="72" y="170">INPUT</text>
+    <text x="72" y="256">MAIN PROCESS · lib/</text>
+    <text x="72" y="430">RENDERER · src/</text>
+    <text x="72" y="536">PERSISTENCE</text>
+  </g>
+
+  <g id="input" transform="translate(72 180)">
+    <rect x="0" y="0" width="240" height="56" rx="4" fill="#F5EEB8" stroke="#53131E" stroke-width="1.5"/>
+    <text x="20" y="24" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#5A464C" letter-spacing="2">SOURCE</text>
+    <text x="20" y="46" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="20" font-weight="700" fill="#53131E">麦克风 · 16kHz PCM</text>
+  </g>
+
+  <g id="asr" transform="translate(360 180)">
+    <rect x="0" y="0" width="360" height="56" rx="4" fill="#F5EEB8" stroke="#53131E" stroke-width="1.5"/>
+    <text x="20" y="24" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#5A464C" letter-spacing="2">ASR · lib/asr.js / asr-volcano.js</text>
+    <text x="20" y="46" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="18" font-weight="700" fill="#53131E">Sherpa-ONNX 本地  ⇄  火山引擎流式</text>
+  </g>
+
+  <g id="transcript" transform="translate(768 180)">
+    <rect x="0" y="0" width="200" height="56" rx="4" fill="#53131E"/>
+    <text x="20" y="24" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#F5EEB8" letter-spacing="2">STREAM</text>
+    <text x="20" y="46" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="20" font-weight="700" fill="#FFFACC">识别文本流</text>
+  </g>
+
+  <line x1="312" y1="208" x2="356" y2="208" stroke="#53131E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="720" y1="208" x2="764" y2="208" stroke="#53131E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <g id="main-process">
+    <rect x="72" y="270" width="1056" height="140" rx="6" fill="none" stroke="#53131E" stroke-width="1.2" stroke-dasharray="4 4"/>
+
+    <g transform="translate(96 288)">
+      <rect x="0" y="0" width="220" height="104" rx="4" fill="#F5EEB8" stroke="#53131E" stroke-width="1.5"/>
+      <text x="16" y="24" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#5A464C" letter-spacing="2">lib/lexicon.js</text>
+      <text x="16" y="48" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="18" font-weight="700" fill="#53131E">词库匹配</text>
+      <text x="16" y="72" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="13" fill="#5A464C">填充 · 犹豫 · 笼统 · 情绪</text>
+      <text x="16" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="13" fill="#5A464C">犹豫词语境判别(≤8 字)</text>
+    </g>
+
+    <g transform="translate(340 288)">
+      <rect x="0" y="0" width="220" height="104" rx="4" fill="#F5EEB8" stroke="#53131E" stroke-width="1.5"/>
+      <text x="16" y="24" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#5A464C" letter-spacing="2">lib/feedback-pool.js</text>
+      <text x="16" y="48" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="18" font-weight="700" fill="#53131E">误判反馈池</text>
+      <text x="16" y="72" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="13" fill="#5A464C">「误判」按钮 → 本地存档</text>
+      <text x="16" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="13" fill="#5A464C">上限 500 条</text>
+    </g>
+
+    <g transform="translate(584 288)">
+      <rect x="0" y="0" width="220" height="104" rx="4" fill="#F5EEB8" stroke="#53131E" stroke-width="1.5"/>
+      <text x="16" y="24" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#5A464C" letter-spacing="2">lib/ai-feedback.js · prompts.js</text>
+      <text x="16" y="48" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="18" font-weight="700" fill="#53131E">AI 反馈</text>
+      <text x="16" y="72" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="13" fill="#5A464C">OpenAI / DeepSeek</text>
+      <text x="16" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="13" fill="#5A464C">Ollama / 自定义兼容接口</text>
+    </g>
+
+    <g transform="translate(828 288)">
+      <rect x="0" y="0" width="220" height="104" rx="4" fill="#53131E"/>
+      <text x="16" y="24" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#F5EEB8" letter-spacing="2">interview mode</text>
+      <text x="16" y="48" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="18" font-weight="700" fill="#FFFACC">面试练习</text>
+      <text x="16" y="72" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="13" fill="#F5EEB8">题型识别 · 要点拆解</text>
+      <text x="16" y="90" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="13" fill="#F5EEB8">面试官视角复盘</text>
+    </g>
+  </g>
+
+  <line x1="868" y1="236" x2="868" y2="268" stroke="#53131E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <g id="renderer">
+    <rect x="72" y="444" width="1056" height="76" rx="6" fill="none" stroke="#53131E" stroke-width="1.2" stroke-dasharray="4 4"/>
+
+    <g transform="translate(96 458)">
+      <text x="0" y="18" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#5A464C" letter-spacing="2">src/index.html · app.js</text>
+      <text x="0" y="46" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="20" font-weight="700" fill="#53131E">全屏字幕(实时批注)</text>
+    </g>
+
+    <g transform="translate(384 458)">
+      <text x="0" y="18" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#5A464C" letter-spacing="2">panel-left</text>
+      <text x="0" y="46" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="20" font-weight="700" fill="#53131E">统计面板</text>
+    </g>
+
+    <g transform="translate(600 458)">
+      <text x="0" y="18" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#5A464C" letter-spacing="2">panel-right</text>
+      <text x="0" y="46" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="20" font-weight="700" fill="#53131E">AI 反馈流</text>
+    </g>
+
+    <g transform="translate(830 458)">
+      <text x="0" y="18" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" fill="#5A464C" letter-spacing="2">modal</text>
+      <text x="0" y="46" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="20" font-weight="700" fill="#53131E">分析报告 · 训练历史</text>
+    </g>
+  </g>
+
+  <line x1="600" y1="410" x2="600" y2="442" stroke="#53131E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <g id="persistence" transform="translate(72 540)">
+    <text x="0" y="18" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="14" fill="#5A464C" letter-spacing="2">userData/  ·  training-history.json  ·  feedback-pool.json  ·  settings.json  &#8212;  全部落在本地,不上云。</text>
+  </g>
+</svg>

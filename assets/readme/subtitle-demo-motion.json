@@ -1,0 +1,53 @@
+{
+  "width": 1200,
+  "fps": 30,
+  "duration": 5.4,
+  "colors": 256,
+  "dither": "none",
+  "clip_to_base_alpha": true,
+  "max_size_mb": 2.0,
+  "layers": [
+    {
+      "id": "w-filler",
+      "enter": {"start": 0.30, "end": 0.90, "from": [0, -12]},
+      "exit": {"start": 5.00, "end": 5.36, "to": [0, -8]}
+    },
+    {
+      "id": "ann-filler",
+      "enter": {"start": 0.85, "end": 1.35, "from": [0, 8]},
+      "exit": {"start": 4.96, "end": 5.36, "to": [0, 4]}
+    },
+    {
+      "id": "w-hedge1",
+      "enter": {"start": 1.20, "end": 1.75, "from": [0, -12]},
+      "exit": {"start": 5.00, "end": 5.36, "to": [0, -8]}
+    },
+    {
+      "id": "w-hedge2",
+      "enter": {"start": 1.60, "end": 2.15, "from": [0, -12]},
+      "exit": {"start": 5.00, "end": 5.36, "to": [0, -8]}
+    },
+    {
+      "id": "ann-hedge",
+      "enter": {"start": 2.05, "end": 2.55, "from": [0, 8]},
+      "exit": {"start": 4.96, "end": 5.36, "to": [0, 4]}
+    },
+    {
+      "id": "ann-vague",
+      "enter": {"start": 2.90, "end": 3.55, "from": [0, 12]},
+      "exit": {"start": 4.96, "end": 5.36, "to": [0, 8]}
+    },
+    {
+      "id": "stat-filler",
+      "enter": {"start": 1.30, "end": 1.60, "from": [0, 6]}
+    },
+    {
+      "id": "stat-hedge",
+      "enter": {"start": 2.50, "end": 2.80, "from": [0, 6]}
+    },
+    {
+      "id": "stat-vague",
+      "enter": {"start": 3.50, "end": 3.80, "from": [0, 6]}
+    }
+  ]
+}

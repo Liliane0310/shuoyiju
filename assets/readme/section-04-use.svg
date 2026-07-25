@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="140" viewBox="0 0 1200 140"
+     role="img" aria-labelledby="s04-title s04-desc">
+  <title id="s04-title">章节 04 · 怎么开始用</title>
+  <desc id="s04-desc">章节标题:04 怎么开始用。右侧说明:三步走——克隆、下载模型、启动。</desc>
+  <rect width="1200" height="140" fill="#FFFACC"/>
+  <line x1="72" y1="46" x2="1128" y2="46" stroke="#53131E" stroke-width="1.2" stroke-opacity="0.35"/>
+  <text x="72" y="34" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="14" fill="#5A464C" letter-spacing="4">SECTION</text>
+  <text x="72" y="106" font-family="'JetBrains Mono','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="72" font-weight="900" fill="#5A464C" letter-spacing="4">04</text>
+  <text x="228" y="106" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="52" font-weight="900" fill="#53131E" letter-spacing="4">怎么开始用</text>
+  <line x1="228" y1="120" x2="440" y2="120" stroke="#53131E" stroke-width="2"/>
+  <text x="720" y="82" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="20" fill="#53131E">三步:克隆项目 → 下载识别模型 → 启动。</text>
+  <text x="720" y="112" font-family="'Songti SC','STSong','Noto Serif SC','PingFang SC',serif" font-size="20" fill="#53131E">配置 AI 后端也在设置页里一步完成。</text>
+</svg>
